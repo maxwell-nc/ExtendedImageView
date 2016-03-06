@@ -36,7 +36,7 @@ public class ImageCompress {
 		// 默认不缩放
 		int compressSampleSize = 1;
 
-		if (height > 0 && width > 0) {
+		if (height > 0 && width > 0) {//防止图片大小为0x0
 			// 根据长宽计算最佳采样大小
 			if (height > viewHeight || width > viewWidth) {
 				int heightRadio = height / viewHeight;

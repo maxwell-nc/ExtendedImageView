@@ -16,12 +16,13 @@ import android.widget.ImageView;
 public class ExImageView extends ImageView {
 
 	//TODO： 添加支持本地图片
-	//TODO： 考虑第一次ImageView有可能还没测量到宽高
 	
 	private Context context;
 	private WorkTask workTask;
 	private Thread thread;
 	private WebImage webImage;
+
+    private int failedLoadResId;
 
 	public ExImageView(Context context) {
 		super(context);
@@ -55,30 +56,39 @@ public class ExImageView extends ImageView {
 	public void setWebImage(final String imageUrl, final int loadingResId,
 			final int failedLoadResId) {
 
+        this.failedLoadResId = failedLoadResId;
+
 		//清空显示
-		setImageBitmap(null);
+        setImageBitmap(null);
 		
 		if (loadingResId != -1) {
 			setImageResource(loadingResId);
 		}
 
-		// 第一次则加载数据
-		if (webImage == null) {
-			webImage = new WebImage(context);
-			getSize();
-		}
+        if (webImage == null) {
+            webImage = new WebImage(context);
+        }
 
-		webImage.imageUrl = imageUrl;
-		webImage.md5Code = MD5Utils.getMD5String(imageUrl);
+        webImage.imageUrl = imageUrl;
+        webImage.md5Code = MD5Utils.getMD5String(imageUrl);
 
-		// 取消上次的加载
-		if (workTask != null) {
-			workTask.cancel();
-			thread.interrupt();
-			workTask = null;
-			thread = null;
-		}
+		if (workTask == null) { // 第一次则加载数据
+            getSize();//等待获取控件size后自动启动任务
+            return;
+		}else{// 非第一次加载，取消上次的加载
+            workTask.cancel();
+            thread.interrupt();
+            workTask = null;
+            thread = null;
+            startDownloadTask();
+        }
 
+	}
+
+    /**
+     * 启动下载图片任务并显示结果
+     */
+	private void startDownloadTask() {
 		workTask = new WorkTask(webImage);
 		thread = new Thread(workTask);
 
@@ -98,7 +108,6 @@ public class ExImageView extends ImageView {
 		});
 
 		thread.start();
-
 	}
 
 	/**
@@ -111,12 +120,10 @@ public class ExImageView extends ImageView {
 			public void onLayoutChange(View v, int left, int top, int right,
 					int bottom, int oldLeft, int oldTop, int oldRight,
 					int oldBottom) {
+				webImage.viewHeight = getMeasuredHeight();
+				webImage.viewWidth = getMeasuredWidth();
 
-				int viewHeight = getMeasuredHeight();
-				int viewWidth = getMeasuredWidth();
-
-				webImage.viewHeight = viewHeight;
-				webImage.viewWidth = viewWidth;
+                startDownloadTask();
 
 				// 防止多次调用
 				removeOnLayoutChangeListener(this);
