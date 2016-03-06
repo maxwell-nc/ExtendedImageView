@@ -8,7 +8,6 @@ ExtendedImageView是Android自带控件ImageView的扩展版，支持加载网�
 
 ##备注
 - 待添加支持本地图片
-- 考虑第一次ImageView有可能还没测量到宽高
 
 # 快速使用
 
