@@ -1,20 +1,19 @@
-package pres.nc.maxwell.extendedimageview;
+package pres.nc.maxwell.extendedimageview.ui;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.AttributeSet;
+import android.view.View;
 
 import pres.nc.maxwell.extendedimageview.entity.WebImage;
 import pres.nc.maxwell.extendedimageview.thread.WorkTask;
 import pres.nc.maxwell.extendedimageview.thread.WorkTask.ResultHandler;
 import pres.nc.maxwell.extendedimageview.utils.MD5Utils;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
-
 /**
- * 扩展的ImageView
+ * 支持加载网络图片的ImageView
  */
-public class ExImageView extends ImageView {
+public class WebImageView extends ExtentedImageView{
 
     //TODO： 添加支持本地图片
 
@@ -25,37 +24,27 @@ public class ExImageView extends ImageView {
 
     private int failedLoadResId;
 
-    public ExImageView(Context context) {
+    public WebImageView(Context context) {
         super(context);
         this.context = context;
     }
 
-    public ExImageView(Context context, AttributeSet attrs) {
+    public WebImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
     }
 
-    public ExImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public WebImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
     }
 
-    /**
-     * 显示网络图片
-     *
-     * @param imageUrl 图片网址
-     */
+    @Override
     public void setWebImage(String imageUrl) {
         setWebImage(imageUrl, -1, -1);
     }
 
-    /**
-     * 显示网络图片
-     *
-     * @param imageUrl        图片网址
-     * @param loadingResId    加载中的图像
-     * @param failedLoadResId 失败时的图像
-     */
+    @Override
     public void setWebImage(final String imageUrl, final int loadingResId,
                             final int failedLoadResId) {
 
@@ -77,7 +66,6 @@ public class ExImageView extends ImageView {
 
         if (workTask == null) { // 第一次则加载数据
             getSize();//等待获取控件size后自动启动任务
-            return;
         } else {// 非第一次加载，取消上次的加载
             workTask.cancel();
             thread.interrupt();

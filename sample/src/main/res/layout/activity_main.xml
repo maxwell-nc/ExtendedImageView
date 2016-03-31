@@ -11,9 +11,9 @@
     tools:context="pres.nc.maxwell.testeximageview.MainActivity">
 
 
-    <pres.nc.maxwell.extendedimageview.ExImageView
+    <pres.nc.maxwell.extendedimageview.ui.ScaleImageView
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:id="@+id/eiv_test"/>
+        android:id="@+id/siv_test"/>
 
 </RelativeLayout>
