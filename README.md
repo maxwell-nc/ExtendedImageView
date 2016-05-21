@@ -1,5 +1,8 @@
 # 说明
 ExtendedImageView是Android自带控件ImageView的扩展版，支持加载网络图片，拥有三级缓存图片管理，居中缩放拖动效果。
+我建议看看：https://github.com/maxwell-nc/ImageLoader
+以后这个带缓存的将会被分出为缓存Branch，一般不更新
+主干将会去掉加载网络图片，主要提供ImageView图片扩展功能
 
 ##特点
 - 支持HTTP和HTTPS地址的图片
